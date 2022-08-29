@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:voyage/screens/home_screen.dart';
 import 'package:voyage/screens/on_boarding_screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
 
-  static String routeName = "/sign";
+  static const String routeName = "splash-screen";
 
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -16,15 +18,23 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const WelcomeScreen(),
-        ),
-      );
+    Timer(const Duration(seconds: 1, milliseconds: 500), () {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if(user == null){
+          Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
+        } else {
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        }
+      });
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
   }
 
   @override
